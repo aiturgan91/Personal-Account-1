@@ -1,0 +1,97 @@
+import java.util.ArrayList;
+
+enum transactiontype {
+    deposit,
+    withdrawal
+}
+
+class amount {
+    private double amount;
+    private transactiontype transactiontype;
+
+    public amount(double amount, transactiontype transactiontype) {
+        this.amount = amount;
+        this.transactiontype = transactiontype;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public transactiontype getTransactionType() {
+        return transactiontype;
+    }
+
+    @Override
+    public String toString() {
+        return transactiontype + ": $" + amount;
+    }
+}
+
+class personalaccount {
+    private int accountnumber;
+    private String accountholder;
+    private double balance;
+    private ArrayList<amount> transactions;
+
+    public personalaccount(int accountnumber, String accountholder) {
+        this.accountnumber = accountnumber;
+        this.accountholder = accountholder;
+        this.balance = 0.0;
+        this.transactions = new ArrayList<>();
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            transactions.add(new amount(amount, transactiontype.deposit));
+        } else {
+            System.out.println("deposit amount must be positive.");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            transactions.add(new amount(amount, transactiontype.withdrawal));
+        } else if (amount > balance) {
+            System.out.println("insufficient balance.");
+        } else {
+            System.out.println("withdrawal amount must be positive.");
+        }
+    }
+
+    public void printtransactionhistory() {
+        if (transactions.isEmpty()) {
+            System.out.println("no transactions available.");
+        } else {
+            for (amount transaction : transactions) {
+                System.out.println(transaction);
+            }
+        }
+    }
+
+    public double getbalance() {
+        return balance;
+    }
+
+    public int getaccountnumber() {
+        return accountnumber;
+    }
+
+    public String getaccountholder() {
+        return accountholder;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        personalaccount account = new personalaccount(123456, "aiturgan dzhumabekova");
+        account.deposit(500);
+        account.withdraw(200);
+        account.withdraw(100);
+        account.withdraw(300);
+        System.out.println("balance: $" + account.getbalance());
+        account.printtransactionhistory();
+    }
+}
