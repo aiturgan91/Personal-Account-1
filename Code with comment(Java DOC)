@@ -1,0 +1,164 @@
+import java.util.ArrayList;
+
+/**
+ * This enum defines the types of transactions we can do with the account.
+ */
+enum TransactionType {
+    DEPOSIT,      // When money is added to the account
+    WITHDRAWAL    // When money is taken out of the account
+}
+
+/**
+ * This class represents a transaction amount.
+ * It holds how much money was involved and whether it was a deposit or withdrawal.
+ */
+class Amount {
+    private double amount;                // The amount of money in this transaction
+    private TransactionType transactionType; // The type of transaction (DEPOSIT or WITHDRAWAL)
+
+    /**
+     * Constructor to create a new Amount object.
+     * @param amount The amount of money for the transaction
+     * @param transactionType The type of transaction (either DEPOSIT or WITHDRAWAL)
+     */
+    public Amount(double amount, TransactionType transactionType) {
+        this.amount = amount; // Set the amount
+        this.transactionType = transactionType; // Set the transaction type
+    }
+
+    /**
+     * This method returns the amount of the transaction.
+     * @return The transaction amount
+     */
+    public double getAmount() {
+        return amount; // Just give back the amount
+    }
+
+    /**
+     * This method returns the type of the transaction.
+     * @return The type of transaction (DEPOSIT or WITHDRAWAL)
+     */
+    public TransactionType getTransactionType() {
+        return transactionType; // Return the transaction type
+    }
+
+    /**
+     * This method gives a nice string representation of the transaction.
+     * @return A string showing the transaction type and amount
+     */
+    @Override
+    public String toString() {
+        return transactionType + ": $" + amount; // Format the output
+    }
+}
+
+/**
+ * This class represents a personal bank account.
+ * It keeps track of the account holder, balance, and transactions.
+ */
+class PersonalAccount {
+    private int accountNumber;                // Unique ID for the account
+    private String accountHolder;              // Name of the person who owns the account
+    private double balance;                     // Current money in the account
+    private ArrayList<Amount> transactions;    // List of all transactions made
+
+    /**
+     * Constructor for creating a new PersonalAccount.
+     * @param accountNumber The unique account number
+     * @param accountHolder The name of the account holder
+     */
+    public PersonalAccount(int accountNumber, String accountHolder) {
+        this.accountNumber = accountNumber;           // Set the account number
+        this.accountHolder = accountHolder;           // Set the account holder's name
+        this.balance = 0.0;                           // Start with a balance of zero
+        this.transactions = new ArrayList<>();        // Prepare to hold transaction records
+    }
+
+    /**
+     * Method to deposit money into the account.
+     * @param amount The amount to deposit
+     */
+    public void deposit(double amount) {
+        if (amount > 0) {                              // Make sure the amount is positive
+            balance += amount;                         // Add it to the balance
+            transactions.add(new Amount(amount, TransactionType.DEPOSIT)); // Record the deposit
+        } else {
+            System.out.println("Deposit amount must be positive."); // Error if the amount is negative
+        }
+    }
+
+    /**
+     * Method to withdraw money from the account.
+     * @param amount The amount to withdraw
+     */
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {         // Check that the withdrawal is valid
+            balance -= amount;                         // Subtract it from the balance
+            transactions.add(new Amount(amount, TransactionType.WITHDRAWAL)); // Record the withdrawal
+        } else if (amount > balance) {
+            System.out.println("Insufficient balance."); // Error if not enough money
+        } else {
+            System.out.println("Withdrawal amount must be positive."); // Error for negative amount
+        }
+    }
+
+    /**
+     * This method prints the transaction history of the account.
+     */
+    public void printTransactionHistory() {
+        if (transactions.isEmpty()) {                   // Check if there are any transactions
+            System.out.println("No transactions available."); // Let the user know
+        } else {
+            for (Amount transaction : transactions) {  // Loop through each transaction
+                System.out.println(transaction);       // Print each one
+            }
+        }
+    }
+
+    /**
+     * This method returns the current balance of the account.
+     * @return The current balance
+     */
+    public double getBalance() {
+        return balance;                                 // Just return the balance
+    }
+
+    /**
+     * This method returns the account number.
+     * @return The account number
+     */
+    public int getAccountNumber() {
+        return accountNumber;                           // Return the account number
+    }
+
+    /**
+     * This method returns the name of the account holder.
+     * @return The name of the account holder
+     */
+    public String getAccountHolder() {
+        return accountHolder;                           // Return the name of the account holder
+    }
+}
+
+/**
+ * The Main class is where everything starts.
+ * It shows how to use the PersonalAccount class.
+ */
+public class Main {
+    public static void main(String[] args) {
+        // Create a personal account for Aiturgan
+        PersonalAccount account = new PersonalAccount(123456, "Aiturgan Dzhumabekova");
+
+        // Let's try depositing some money
+        account.deposit(500);                            // Deposit $500
+        account.withdraw(200);                           // Withdraw $200
+        account.withdraw(100);                           // Withdraw $100
+        account.withdraw(300);                           // Try to withdraw $300 (should fail)
+
+        // Print out the current balance
+        System.out.println("Balance: $" + account.getBalance()); // Display balance
+
+        // Show the transaction history
+        account.printTransactionHistory();               // Display all transactions
+    }
+}
