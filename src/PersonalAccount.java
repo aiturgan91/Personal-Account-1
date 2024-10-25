@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class PersonalAccount {
     public int accountNumber;
     public String accountHolder;
-    public double balance;
+    private double balance;
     private ArrayList<amount> transactions;
 
     //constructor
